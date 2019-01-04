@@ -1,0 +1,63 @@
+﻿@page
+@model IndexModel
+@inject SignInManager<IdentityUser> SignInManager
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="container text-center">
+    @*<p><a asp-area="" asp-page="Create">Submit A Video of Your Talent!</a></p>
+
+        if (SignInManager.IsSignedIn(User))
+        {
+            <hr/>
+            <p>Review submissions <a asp-area="" asp-page="Submissions/Index">HERE</a></p>
+            <p>Add/Change locations <a asp-area="" asp-page="Locations/Index">HERE</a></p>
+            <hr/>
+        }*@
+    <img src="~/images/HGStalents.jpg" class="img-fluid" alt="HGS Talent Show" />
+    <h1>HGS is holding it's first ever talent contest!</h1>
+    <h3><span class="text-primary">Can you sing?</span> <span class="text-danger">Can you dance?</span></h3>
+    <h3><span class="text-warning">Can you entertain a crowd?</span></h3>
+
+    <p>
+        The Grand Prize Winner will win a trip to
+        HGS GBM 2019
+        at Aria in Las Vegas
+        and dazzle us with your
+        winning act on stage!
+    </p>
+    <div class="row">
+        <div class="col"><hr /></div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h2><a asp-area="" asp-page="/Create">Submit your video entry</a> by March 1, 2019.</h2><h4>GBM Awards show is April 10, 2019.</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col"><hr /></div>
+    </div>
+    <div class="row text-left">
+        <div class="col">
+            <h4 class="text-left">Rules</h4>
+            <ul class="text-left">
+                <li>Contest is open to current HGS employees only.</li>
+                <li>Acts requiring more than 12 FEET of ceiling height will not be allowed.</li>
+                <li>Acts will be allotted no more than FIVE (5) MINUTES to perform.</li>
+                <li>NO profanity or vulgar lyrics in any vocal performance or dance music.</li>
+                <li>NO nudity allowed! Keep attire at a respectable and tasteful level.</li>
+                <li>NO alcohol, tobacco, or drug advertisements are to be shown on any clothing.</li>
+                <li>NO pyrotechnics, open flames or any other dangerous additions.</li>
+                <li>A Sound Technician and microphone will be provided. Your act MUST provide their own recorded music, instruments, props, etc., if needed.</li>
+                <li>Recorded music MUST be on a CD or USB flash drive in an acceptable format (i.e. MP3 or WAV file).</li>
+            </ul>
+        </div>
+    </div>
+    <div class="row text-center">
+        <div class="col">
+            <h5 class="text-danger">NO EXCEPTIONS WILL BE MADE TO THESE RULES!</h5>
+            <h6>Rules are subject to change at the sole discretion of the HGS GBM organizers.</h6>
+        </div>
+    </div>
+</div>

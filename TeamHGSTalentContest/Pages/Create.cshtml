@@ -1,0 +1,88 @@
+﻿@page
+@model TeamHGSTalentContest.Pages.CreateModel
+
+@{
+    ViewData["Title"] = "Submit";
+}
+<div class="container">
+<h4>Submit your Video</h4>
+<hr />
+<div class="row justify-content-center">
+    <div class="col-md-8 col-sm-12">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row py-md-2">
+                <div class="col-sm py-sm-1">
+                    <label asp-for="Submission.FirstName"></label>
+                    <input asp-for="Submission.FirstName" class="form-control" />
+                    <span asp-validation-for="Submission.FirstName" class="text-danger"></span>
+                </div>
+                <div class="col-sm py-sm-1">
+                    <label asp-for="Submission.LastName"></label>
+                    <input asp-for="Submission.LastName" class="form-control" />
+                    <span asp-validation-for="Submission.LastName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row py-md-2">
+                <div class="col-sm py-sm-1">
+                    <label asp-for="Submission.Email"></label>
+                    <input asp-for="Submission.Email" class="form-control" />
+                    <span asp-validation-for="Submission.Email" class="text-danger"></span>
+                </div>
+                <div class="col-sm py-sm-1">
+                    <label asp-for="Submission.PhoneNumber"></label>
+                    <input asp-for="Submission.PhoneNumber" class="form-control" />
+                    <span asp-validation-for="Submission.PhoneNumber" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row py-md-2">
+                <div class="col-sm py-sm-2">
+                    <label asp-for="Submission.ManagerName"></label>
+                    <input asp-for="Submission.ManagerName" class="form-control" />
+                    <span asp-validation-for="Submission.ManagerName" class="text-danger"></span>
+                </div>
+                <div class="col-sm py-sm-2">
+                    <label asp-for="Submission.LocationId"></label>
+                    <select asp-for="Submission.LocationId" asp-items="Model.LocationSL" class="form-control">
+                        <option value="0">-- Select a location --</option>
+                    </select>
+                    <span asp-validation-for="Submission.LocationId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row py-md-2">
+                <div class="col-sm py-4 py-sm-2">
+                    <label asp-for="Submission.Talent"></label>
+                    <textarea asp-for="Submission.Talent" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Submission.Talent" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row py-md-2">
+                <div class="col-sm py-4 py-sm-2">
+                    <div class="custom-file">
+                        <label asp-for="Submission.FormFile" class="custom-file-label"></label>
+                        <input asp-for="Submission.FormFile" class="custom-file-input" />
+                        <span asp-validation-for="Submission.FormFile" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row py-md-2">
+                <div class="col-sm py-sm-2">
+                    <input type="submit" value="Submit" class="btn btn-primary" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $('#Submission_FormFile').on('change',function(){
+            //get the file name
+            var fileName = $(this).val().replace("C:\\fakepath\\", "");;
+            //console.log(fileName);
+            //replace the "Choose a file" label
+            $(this).next('.custom-file-label').html(fileName);
+        })
+    </script>
+}
