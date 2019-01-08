@@ -34,6 +34,13 @@ namespace TeamHGSTalentContest.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var supportedTypes = new[] { "mp4", "webm", "ogg"};
+            var fileExt = System.IO.Path.GetExtension(Submission.FormFile.FileName).Substring(1);
+            if (!supportedTypes.Contains(fileExt))
+            {
+                ModelState.AddModelError("Submission.FileName","File must be in mp4, webm, or ogg format.");
+            }
+
             if (!ModelState.IsValid)
             {
                 Submission.ErrorMessage = "ModelState is not valid.";
@@ -52,12 +59,13 @@ namespace TeamHGSTalentContest.Pages
                 ManagerName = Submission.ManagerName,
                 LocationId = Submission.LocationId,
                 PhoneNumber = Submission.PhoneNumber,
-                FileName = fileName
+                FileName = fileName,
+                Talent = Submission.Talent
             };
             _context.Submissions.Add(sub);
             await _context.SaveChangesAsync();
-
-            return RedirectToPage("./Index");
+            var guid = sub.StringId;
+            return RedirectToPage("ThankYou", new { id = guid});
         }
     }
 }

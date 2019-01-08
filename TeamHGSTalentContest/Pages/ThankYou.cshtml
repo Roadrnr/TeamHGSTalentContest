@@ -1,0 +1,43 @@
+﻿@page
+@model TeamHGSTalentContest.Pages.ThankYouModel
+
+@{
+    ViewData["Title"] = "Thank You";
+}
+
+
+<div class="container">
+    <h1>Thank You</h1>
+    <h4>We've received the below entry...</h4>
+    <div class="row">
+        <div class="col">
+            <video controls class="card-img-top">
+                <source src="@Html.DisplayFor(modelItem => Model.Submission.FileName)" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <div class="col">
+            <h5>@Html.DisplayFor(modelItem => Model.Submission.Name)</h5>
+            <p>
+                <a href="mailto:@Html.Raw(Model.Submission.Email)">@Html.DisplayFor(modelItem => Model.Submission.Email)</a>
+            </p>
+            <ul class="list-group list-group-flush">
+                @if (string.IsNullOrEmpty(Model.Submission.Talent))
+                {
+                    <li class="list-group-item">Talent: No talent description provided.</li>
+                }
+                else
+                {
+                    <li class="list-group-item">Talent: @Html.DisplayFor(modelItem => Model.Submission.Talent)</li>
+                }
+                <li class="list-group-item">Location: @Html.DisplayFor(modelItem => Model.Submission.LocationName)</li>
+                <li class="list-group-item">Manager: @Html.DisplayFor(modelItem => Model.Submission.ManagerName)</li>
+                <li class="list-group-item">Phone: <a href="tel:@Html.DisplayFor(modelItem => Model.Submission.PhoneNumber)">@Html.DisplayFor(modelItem => Model.Submission.PhoneNumber)</a></li>
+                <li class="list-group-item">Submitted On: @Html.DisplayFor(modelItem => Model.Submission.DateCreated)</li>
+            </ul>
+        </div>
+    </div>
+    <div class="row pt-4">
+        <div class="col"><a asp-page="./Index">Back to Home Page</a></div>
+    </div>
+</div>

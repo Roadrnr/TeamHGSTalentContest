@@ -33,7 +33,7 @@ namespace TeamHGSTalentContest.ViewModels
         [Required]
         [EmailAddress]
         [StringLength(320, MinimumLength = 5)]
-        [Display(Name = "Email Address (work email if possible)")]
+        [Display(Name = "Email Address (work email preferred)")]
         public string Email { get; set; }
 
         [Required]
@@ -46,7 +46,7 @@ namespace TeamHGSTalentContest.ViewModels
         public string Talent { get; set; }
 
         [Required]
-        [Display(Name = "Choose a file")]
+        [Display(Name = "Choose a video file")]
         public IFormFile FormFile { get; set; }
 
         [Display(Name = "File Name")]

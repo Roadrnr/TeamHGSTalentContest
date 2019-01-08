@@ -10,6 +10,8 @@
   <ItemGroup>
     <Compile Remove="Data\Migrations\20190103190439_Init.cs" />
     <Compile Remove="Data\Migrations\20190103190439_Init.Designer.cs" />
+    <Compile Remove="Data\Migrations\20190108165637_AddStringId.cs" />
+    <Compile Remove="Data\Migrations\20190108165637_AddStringId.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

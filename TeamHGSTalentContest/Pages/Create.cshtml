@@ -62,6 +62,7 @@
                         <label asp-for="Submission.FormFile" class="custom-file-label"></label>
                         <input asp-for="Submission.FormFile" class="custom-file-input" />
                         <span asp-validation-for="Submission.FormFile" class="text-danger"></span>
+                        <span asp-validation-for="Submission.FileName" class="text-danger"></span>
                     </div>
                 </div>
             </div>
@@ -80,9 +81,9 @@
         $('#Submission_FormFile').on('change',function(){
             //get the file name
             var fileName = $(this).val().replace("C:\\fakepath\\", "");;
-            //console.log(fileName);
+            console.log(fileName);
             //replace the "Choose a file" label
-            $(this).next('.custom-file-label').html(fileName);
+            $('.custom-file-label').html(fileName);
         })
     </script>
 }

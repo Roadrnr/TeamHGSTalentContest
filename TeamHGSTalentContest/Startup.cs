@@ -51,9 +51,9 @@ namespace TeamHGSTalentContest
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<IdentityUser> userManager)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            ApplicationDbInitializer.SeedUsers(userManager);
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -71,7 +71,7 @@ namespace TeamHGSTalentContest
             app.UseCookiePolicy();
 
             app.UseAuthentication();
-
+            ApplicationDbInitializer.SeedData(userManager, roleManager).Wait();
             app.UseMvc();
         }
     }
