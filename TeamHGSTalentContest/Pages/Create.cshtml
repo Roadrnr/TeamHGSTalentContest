@@ -5,75 +5,111 @@
     ViewData["Title"] = "Submit";
 }
 <div class="container">
-<h4>Submit your Video</h4>
-<hr />
-<div class="row justify-content-center">
-    <div class="col-md-8 col-sm-12">
-        <form method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="row py-md-2">
-                <div class="col-sm py-sm-1">
-                    <label asp-for="Submission.FirstName"></label>
-                    <input asp-for="Submission.FirstName" class="form-control" />
-                    <span asp-validation-for="Submission.FirstName" class="text-danger"></span>
-                </div>
-                <div class="col-sm py-sm-1">
-                    <label asp-for="Submission.LastName"></label>
-                    <input asp-for="Submission.LastName" class="form-control" />
-                    <span asp-validation-for="Submission.LastName" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="row py-md-2">
-                <div class="col-sm py-sm-1">
-                    <label asp-for="Submission.Email"></label>
-                    <input asp-for="Submission.Email" class="form-control" />
-                    <span asp-validation-for="Submission.Email" class="text-danger"></span>
-                </div>
-                <div class="col-sm py-sm-1">
-                    <label asp-for="Submission.PhoneNumber"></label>
-                    <input asp-for="Submission.PhoneNumber" class="form-control" />
-                    <span asp-validation-for="Submission.PhoneNumber" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="row py-md-2">
-                <div class="col-sm py-sm-2">
-                    <label asp-for="Submission.ManagerName"></label>
-                    <input asp-for="Submission.ManagerName" class="form-control" />
-                    <span asp-validation-for="Submission.ManagerName" class="text-danger"></span>
-                </div>
-                <div class="col-sm py-sm-2">
-                    <label asp-for="Submission.LocationId"></label>
-                    <select asp-for="Submission.LocationId" asp-items="Model.LocationSL" class="form-control">
-                        <option value="0">-- Select a location --</option>
-                    </select>
-                    <span asp-validation-for="Submission.LocationId" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="row py-md-2">
-                <div class="col-sm py-4 py-sm-2">
-                    <label asp-for="Submission.Talent"></label>
-                    <textarea asp-for="Submission.Talent" class="form-control" rows="3"></textarea>
-                    <span asp-validation-for="Submission.Talent" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="row py-md-2">
-                <div class="col-sm py-4 py-sm-2">
-                    <div class="custom-file">
-                        <label asp-for="Submission.FormFile" class="custom-file-label"></label>
-                        <input asp-for="Submission.FormFile" class="custom-file-input" />
-                        <span asp-validation-for="Submission.FormFile" class="text-danger"></span>
-                        <span asp-validation-for="Submission.FileName" class="text-danger"></span>
+    <h4>Submit your Video</h4>
+    <hr />
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-sm-12">
+            <form method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row py-md-2">
+                    <div class="col-sm py-sm-1">
+                        <label asp-for="Submission.FirstName"></label>
+                        <input asp-for="Submission.FirstName" class="form-control" />
+                        <span asp-validation-for="Submission.FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="col-sm py-sm-1">
+                        <label asp-for="Submission.LastName"></label>
+                        <input asp-for="Submission.LastName" class="form-control" />
+                        <span asp-validation-for="Submission.LastName" class="text-danger"></span>
                     </div>
                 </div>
-            </div>
-            <div class="row py-md-2">
-                <div class="col-sm py-sm-2">
-                    <input type="submit" value="Submit" class="btn btn-primary" />
+                <div class="row py-md-2">
+                    <div class="col-sm py-sm-1">
+                        <label asp-for="Submission.Email"></label>
+                        <input asp-for="Submission.Email" class="form-control" />
+                        <span asp-validation-for="Submission.Email" class="text-danger"></span>
+                    </div>
+                    <div class="col-sm py-sm-1">
+                        <label asp-for="Submission.PhoneNumber"></label>
+                        <input asp-for="Submission.PhoneNumber" class="form-control" />
+                        <span asp-validation-for="Submission.PhoneNumber" class="text-danger"></span>
+                    </div>
                 </div>
-            </div>
-        </form>
+                <div class="row py-md-2">
+                    <div class="col-sm py-sm-2">
+                        <label asp-for="Submission.ManagerName"></label>
+                        <input asp-for="Submission.ManagerName" class="form-control" />
+                        <span asp-validation-for="Submission.ManagerName" class="text-danger"></span>
+                    </div>
+                    <div class="col-sm py-sm-2">
+                        <label asp-for="Submission.LocationId"></label>
+                        <select asp-for="Submission.LocationId" asp-items="Model.LocationSl" class="form-control">
+                            <option value="0">-- Select a location --</option>
+                        </select>
+                        <span asp-validation-for="Submission.LocationId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row py-md-2">
+                    <div class="col-sm py-4 py-sm-2">
+                        <label asp-for="Submission.Talent"></label>
+                        <textarea asp-for="Submission.Talent" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Submission.Talent" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row py-md-2">
+                    <div class="col-sm py-4 py-sm-2">
+                        <div class="custom-file">
+                            <label asp-for="Submission.FormFile" class="custom-file-label"></label>
+                            <input asp-for="Submission.FormFile" class="custom-file-input" />
+                            <span asp-validation-for="Submission.FormFile" class="text-danger"></span>
+                            <span asp-validation-for="Submission.FileName" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row py-md-2">
+                    <div class="col-sm py-4 py-sm-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" asp-for="Submission.ImageConsent">
+                            <label class="form-check-label" asp-for="Submission.ImageConsent">
+                                <small>I consent to give HGS the right to use the content submitted in accordance with HGS Image Release Disclaimer. <a href="#" class="m-0 p-0" data-toggle="modal" data-target="#exampleModal">Read more...</a></small>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row py-md-2">
+                    <div class="col-sm py-sm-2">
+                        <input type="submit" value="Submit" class="btn btn-primary" />
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Image Release Diclaimer</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>I hereby authorise Hinduja Global Solutions, hereafter referred to as ‘the company’, the authority to publish photographs and video images submitted by me on the date of this submission for use in the company’s print, online and video based marketing materials, as well as other company publications.</p>
+                <p>I grant Hinduja Global Solutions the unrestricted right and permission to copyright and use, re-use, publish, and re-publish images of me in which I may be included intact or in part, composite or distorted in character or form, without restriction as to changes or transformations in conjunction with my own or a fictitious name, or reproduction hereof in colour or otherwise, made through any and all media now or hereafter known for illustration, art, promotion, advertising, trade, or any other business purpose whatsoever.</p>
+                <p>I hereby release and hold harmless Hinduja Global Solutions and all persons functioning under its permission or authority, from any and all claims or liability arising out of the taking, use, distribution or publication of the images, including without limitation any claims for libel or invasion of privacy.</p>
+                <p>I hereby relinquish any right that I may have to examine or approve the completed product or products or the advertising copy or printed matter that may be used in conjunction therewith or the use to which it may be applied.</p>
+                <p>I agree that I have no rights to the photographs, and all rights of ownership and royalties to the photographs belong to Hinduja Global Solutions.</p>
+                <p>I further acknowledge that my participation is voluntary and that I will not receive financial compensation of any type associated with the taking or publication of these photographs, or participation in the company’s marketing materials or other company publications.</p>
+                <p>I hereby affirm that I am over the age of 18 and have the right to contract in my own name. I have read the above authorisation, release and agreement, prior to its execution; I fully understand the contents thereof.</p>
+                <p>This agreement shall be binding upon me and my heirs, legal representatives and assigns.</p>
+                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

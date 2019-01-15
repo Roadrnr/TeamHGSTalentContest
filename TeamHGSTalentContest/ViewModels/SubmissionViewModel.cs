@@ -54,5 +54,10 @@ namespace TeamHGSTalentContest.ViewModels
 
         [Display(Name = "Error Message")]
         public string ErrorMessage { get; set; }
+
+        [Required]
+        [Display(Name="Image Release Consent")]
+        public bool ImageConsent { get; set; }
+
     }
 }

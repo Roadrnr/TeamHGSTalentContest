@@ -18,6 +18,7 @@ namespace TeamHGSTalentContest.Models
         public string PhoneNumber { get; set; }
         public string Talent { get; set; }
         public string FileName { get; set; }
+        public bool ImageConsent { get; set; }
 
     }
 }

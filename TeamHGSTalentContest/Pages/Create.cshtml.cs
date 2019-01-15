@@ -15,7 +15,7 @@ namespace TeamHGSTalentContest.Pages
     {
         private readonly ApplicationDbContext _context;
         private readonly IAzureStorageService _storage;
-        public SelectList LocationSL { get; set; }
+        public SelectList LocationSl { get; set; }
         public CreateModel(ApplicationDbContext context, IAzureStorageService storage)
         {
             _context = context;
@@ -25,7 +25,7 @@ namespace TeamHGSTalentContest.Pages
         public async Task<IActionResult> OnGet()
         {
             var locations = await _context.Locations.OrderBy(e => e.Name).ToListAsync();
-            LocationSL = new SelectList(locations,nameof(Location.Id),nameof(Location.Name), "0");
+            LocationSl = new SelectList(locations,nameof(Location.Id),nameof(Location.Name), "0");
             return Page();
         }
 
@@ -43,7 +43,7 @@ namespace TeamHGSTalentContest.Pages
 
             if (!ModelState.IsValid)
             {
-                Submission.ErrorMessage = "ModelState is not valid.";
+                Submission.ErrorMessage = "Your entry was not successful.";
                 return Page();
             }
 

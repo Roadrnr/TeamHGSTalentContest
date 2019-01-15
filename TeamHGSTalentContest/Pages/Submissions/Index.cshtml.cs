@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TeamHGSTalentContest.Data;
-using TeamHGSTalentContest.Models;
 using TeamHGSTalentContest.ViewModels;
 
 namespace TeamHGSTalentContest.Pages.Submissions
 {
     public class IndexModel : PageModel
     {
-        private readonly TeamHGSTalentContest.Data.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public IndexModel(TeamHGSTalentContest.Data.ApplicationDbContext context)
+        public IndexModel(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -37,7 +33,8 @@ namespace TeamHGSTalentContest.Pages.Submissions
                 Talent = e.Talent,
                 FileName = e.FileName,
                 Id = e.Id,
-                LocationName = e.Location.Name
+                LocationName = e.Location.Name,
+                ImageConsent = e.ImageConsent
             }).OrderByDescending(e => e.DateCreated).ToList();
             Submission = vm;
         }
