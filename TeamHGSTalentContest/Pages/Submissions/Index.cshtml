@@ -26,6 +26,7 @@
                 <li class="list-group-item">Manager: @Html.DisplayFor(modelItem => item.ManagerName)</li>
                 <li class="list-group-item">Phone: <a href="tel:@Html.DisplayFor(modelItem => item.PhoneNumber)">@Html.DisplayFor(modelItem => item.PhoneNumber)</a></li>
                 <li class="list-group-item">Submitted On: @Html.DisplayFor(modelItem => item.DateCreated)</li>
+                <li class="list-group-item">Image Release: @(item.ImageConsent ? "Yes" : "No")</li>
             </ul>
             <div class="card-body">
                 @if (string.IsNullOrEmpty(item.Talent))

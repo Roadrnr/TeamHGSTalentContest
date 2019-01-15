@@ -73,6 +73,7 @@
                             <label class="form-check-label" asp-for="Submission.ImageConsent">
                                 <small>I consent to give HGS the right to use the content submitted in accordance with HGS Image Release Disclaimer. <a href="#" class="m-0 p-0" data-toggle="modal" data-target="#exampleModal">Read more...</a></small>
                             </label>
+                            <span asp-validation-for="Submission.ImageConsent" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
@@ -90,19 +91,19 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Image Release Diclaimer</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Image Release Disclaimer</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p>I hereby authorise Hinduja Global Solutions, hereafter referred to as ‘the company’, the authority to publish photographs and video images submitted by me on the date of this submission for use in the company’s print, online and video based marketing materials, as well as other company publications.</p>
-                <p>I grant Hinduja Global Solutions the unrestricted right and permission to copyright and use, re-use, publish, and re-publish images of me in which I may be included intact or in part, composite or distorted in character or form, without restriction as to changes or transformations in conjunction with my own or a fictitious name, or reproduction hereof in colour or otherwise, made through any and all media now or hereafter known for illustration, art, promotion, advertising, trade, or any other business purpose whatsoever.</p>
+                <p>I hereby authorize Hinduja Global Solutions, hereafter referred to as ‘the company’, the authority to publish photographs and video images submitted by me on the date of this submission for use in the company’s print, online and video based marketing materials, as well as other company publications.</p>
+                <p>I grant Hinduja Global Solutions the unrestricted right and permission to copyright and use, re-use, publish, and re-publish images of me in which I may be included intact or in part, composite or distorted in character or form, without restriction as to changes or transformations in conjunction with my own or a fictitious name, or reproduction hereof in color or otherwise, made through any and all media now or hereafter known for illustration, art, promotion, advertising, trade, or any other business purpose whatsoever.</p>
                 <p>I hereby release and hold harmless Hinduja Global Solutions and all persons functioning under its permission or authority, from any and all claims or liability arising out of the taking, use, distribution or publication of the images, including without limitation any claims for libel or invasion of privacy.</p>
                 <p>I hereby relinquish any right that I may have to examine or approve the completed product or products or the advertising copy or printed matter that may be used in conjunction therewith or the use to which it may be applied.</p>
                 <p>I agree that I have no rights to the photographs, and all rights of ownership and royalties to the photographs belong to Hinduja Global Solutions.</p>
                 <p>I further acknowledge that my participation is voluntary and that I will not receive financial compensation of any type associated with the taking or publication of these photographs, or participation in the company’s marketing materials or other company publications.</p>
-                <p>I hereby affirm that I am over the age of 18 and have the right to contract in my own name. I have read the above authorisation, release and agreement, prior to its execution; I fully understand the contents thereof.</p>
+                <p>I hereby affirm that I am over the age of 18 and have the right to contract in my own name. I have read the above authorization, release and agreement, prior to its execution; I fully understand the contents thereof.</p>
                 <p>This agreement shall be binding upon me and my heirs, legal representatives and assigns.</p>
                 </div>
             <div class="modal-footer">
@@ -114,12 +115,24 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
-        $('#Submission_FormFile').on('change',function(){
-            //get the file name
-            var fileName = $(this).val().replace("C:\\fakepath\\", "");;
-            console.log(fileName);
-            //replace the "Choose a file" label
-            $('.custom-file-label').html(fileName);
-        })
+        $('#Submission_FormFile').on('change',
+            function() {
+                //get the file name
+                var fileName = $(this).val().replace("C:\\fakepath\\", "");;
+                //replace the "Choose a file" label
+                $('.custom-file-label').html(fileName);
+            });
+
+        // extend jquery range validator to work for required checkboxes
+        var defaultRangeValidator = $.validator.methods.range;
+        $.validator.methods.range = function (value, element, param) {
+            if (element.type === 'checkbox') {
+                // if it's a checkbox return true if it is checked
+                return element.checked;
+            } else {
+                // otherwise run the default validation function
+                return defaultRangeValidator.call(this, value, element, param);
+            }
+        }
     </script>
 }

@@ -56,6 +56,7 @@ namespace TeamHGSTalentContest.ViewModels
         public string ErrorMessage { get; set; }
 
         [Required]
+        [Range(typeof(bool), "true", "true", ErrorMessage = "You must consent to the image release...")]
         [Display(Name="Image Release Consent")]
         public bool ImageConsent { get; set; }
 

@@ -41,8 +41,16 @@ namespace TeamHGSTalentContest.Pages
                 ModelState.AddModelError("Submission.FileName","File must be in mp4, webm, or ogg format.");
             }
 
+            if (!Submission.ImageConsent)
+            {
+                ModelState.AddModelError("Submission.ImageConsent", "You must agree to the image consent.");
+            }
+
             if (!ModelState.IsValid)
             {
+                Submission.FileName = Submission.FormFile.FileName;
+                var locations = await _context.Locations.OrderBy(e => e.Name).ToListAsync();
+                LocationSl = new SelectList(locations, nameof(Location.Id), nameof(Location.Name), "0");
                 Submission.ErrorMessage = "Your entry was not successful.";
                 return Page();
             }
@@ -60,7 +68,8 @@ namespace TeamHGSTalentContest.Pages
                 LocationId = Submission.LocationId,
                 PhoneNumber = Submission.PhoneNumber,
                 FileName = fileName,
-                Talent = Submission.Talent
+                Talent = Submission.Talent,
+                ImageConsent = Submission.ImageConsent
             };
             _context.Submissions.Add(sub);
             await _context.SaveChangesAsync();
