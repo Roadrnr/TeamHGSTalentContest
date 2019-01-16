@@ -80,6 +80,7 @@
                 <div class="row py-md-2">
                     <div class="col-sm py-sm-2">
                         <input type="submit" value="Submit" class="btn btn-primary" />
+                        <span class="pleaseWait text-warning"></span>
                     </div>
                 </div>
             </form>
@@ -122,6 +123,19 @@
                 //replace the "Choose a file" label
                 $('.custom-file-label').html(fileName);
             });
+
+        $(function(){ 
+            $('input:submit').click(function(){ 
+                $(this).val('Loading...');
+                $('.pleaseWait').html("Please be patient. This may take a few minutes depending on the file size.");
+                $(this).attr('disabled', 'disabled'); 
+                $(this).parents('form').submit(); 
+            }); 
+        });
+
+        $(function () { 
+            $('input:submit').removeAttr('disabled'); 
+        });
 
         // extend jquery range validator to work for required checkboxes
         var defaultRangeValidator = $.validator.methods.range;
