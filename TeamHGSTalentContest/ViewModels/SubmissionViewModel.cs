@@ -25,6 +25,7 @@ namespace TeamHGSTalentContest.ViewModels
 
         [Required]
         [Display(Name = "Choose your location")]
+        [Range(typeof(int), "1", "999", ErrorMessage = "Please choose a location.")]
         public int LocationId { get; set; }
 
         [Display(Name="Location")]

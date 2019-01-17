@@ -9,7 +9,7 @@
     <hr />
     <div class="row justify-content-center">
         <div class="col-md-8 col-sm-12">
-            <form method="post" enctype="multipart/form-data">
+            <form method="post" enctype="multipart/form-data" id="EntryForm">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="row py-md-2">
                     <div class="col-sm py-sm-1">
@@ -132,14 +132,17 @@
                 $('.custom-file-label').html(fileName);
             });
 
-        $(function(){ 
-            $('input:submit').click(function(){ 
+        $(function() {
+            $('input:submit').click(function () {
+                var form = $("#EntryForm");
+                if (form.valid()) {
                 $(this).val('Loading...');
                 $('.pleaseWait').html("Please be patient. This may take a few minutes depending on the file size.");
-                $(this).attr('disabled', 'disabled'); 
-                $(this).parents('form').submit(); 
-            }); 
+                $(this).attr('disabled', 'disabled');
+                $(this).parents('form').submit();
+            }
         });
+    });
 
         $(function () { 
             $('input:submit').removeAttr('disabled'); 
