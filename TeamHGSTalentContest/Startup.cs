@@ -45,6 +45,9 @@ namespace TeamHGSTalentContest
                 {
                     options.Conventions.AuthorizeFolder("/Locations");
                     options.Conventions.AuthorizeFolder("/Submissions");
+                    options.Conventions.AuthorizeFolder("/Faqs");
+                    options.Conventions.AuthorizeFolder("/Rules");
+                    options.Conventions.AuthorizeFolder("/Info");
                     options.Conventions.AuthorizePage("/Identity/Account/Register");
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

@@ -6,6 +6,7 @@
 }
 
 <h1>Review Submissions</h1>
+<a asp-page-handler="ViewArchive">View Archive</a>
 <hr/>
 <div class="card-columns mt-4">
     @foreach (var item in Model.Submission)
@@ -37,6 +38,17 @@
                 {
                     @Html.DisplayFor(modelItem => item.Talent)
                 }
+            </div>
+            <div class="card-footer">
+                @if (item.Archive)
+                {
+                    <a asp-page-handler="Restore" asp-route-id="@item.Id">Restore This Entry</a> <span>|</span>
+                }
+                else
+                {
+                    <a asp-page-handler="Archive" asp-route-id="@item.Id">Archive This Entry</a> <span>|</span>
+                }
+                <a asp-page-handler="Delete" asp-route-id="@item.Id">Delete This Entry</a>
             </div>
         </div>
     }

@@ -13,6 +13,6 @@ namespace TeamHGSTalentContest.Services
         Task StoreFile(string filename, string containerName, IFormFile image);
         Task<string> GetFile(string filename, string containerName);
         Task<Stream> StreamFile(string filename, string containerName);
-        Task DeleteFile(string filename, string containerName);
+        Task<bool> DeleteFile(string filename, string containerName);
     }
 }

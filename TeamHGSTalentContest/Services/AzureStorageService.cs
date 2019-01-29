@@ -182,11 +182,12 @@ namespace TeamHGSTalentContest.Services
             return await file.OpenReadAsync();
         }
 
-        public async Task DeleteFile(string filename, string containerName)
+        public async Task<bool> DeleteFile(string filename, string containerName)
         {
             await GetContainer(containerName);
             var file = _container.GetBlockBlobReference(filename);
-            await file.DeleteIfExistsAsync();
+            var result = await file.DeleteIfExistsAsync();
+            return result;
         }
     }
 }

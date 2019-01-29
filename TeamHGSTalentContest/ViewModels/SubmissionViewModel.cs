@@ -61,5 +61,6 @@ namespace TeamHGSTalentContest.ViewModels
         [Display(Name="Image Release Consent")]
         public bool ImageConsent { get; set; }
 
+        public bool Archive { get; set; }
     }
 }

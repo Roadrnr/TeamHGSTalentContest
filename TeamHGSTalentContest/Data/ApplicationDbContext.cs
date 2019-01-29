@@ -19,6 +19,11 @@ namespace TeamHGSTalentContest.Data
         public DbSet<Submission> Submissions { get; set; }
         public DbSet<Location> Locations { get; set; }
 
+        public DbSet<Faq> Faqs { get; set; }
+
+        public DbSet<Rule> Rules { get; set; }
+        public DbSet<ContestInfo> ContestInfo { get; set; }
+
         public override int SaveChanges()
         {
             AddTimestamps();
@@ -26,13 +31,13 @@ namespace TeamHGSTalentContest.Data
         }
 
         public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             AddTimestamps();
             return await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
 
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             AddTimestamps();
             return base.SaveChangesAsync(cancellationToken);
