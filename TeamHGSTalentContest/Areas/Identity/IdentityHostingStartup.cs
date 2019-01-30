@@ -1,13 +1,7 @@
-﻿using System;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using TeamHGSTalentContest.Data;
+﻿using Microsoft.AspNetCore.Hosting;
+using TeamHGSTalentContest.Areas.Identity;
 
-[assembly: HostingStartup(typeof(TeamHGSTalentContest.Areas.Identity.IdentityHostingStartup))]
+[assembly: HostingStartup(typeof(IdentityHostingStartup))]
 namespace TeamHGSTalentContest.Areas.Identity
 {
     public class IdentityHostingStartup : IHostingStartup

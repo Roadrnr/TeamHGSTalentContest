@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -35,7 +36,7 @@ namespace TeamHGSTalentContest.Pages
         public async Task<IActionResult> OnPostAsync()
         {
             var supportedTypes = new[] { "mp4", "webm", "ogg"};
-            var fileExt = System.IO.Path.GetExtension(Submission.FormFile.FileName).Substring(1);
+            var fileExt = Path.GetExtension(Submission.FormFile.FileName).Substring(1);
             if (!supportedTypes.Contains(fileExt))
             {
                 ModelState.AddModelError("Submission.FileName","File must be in mp4, webm, or ogg format.");

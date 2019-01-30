@@ -1,17 +1,17 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using TeamHGSTalentContest.Data;
 using TeamHGSTalentContest.ViewModels;
 
 namespace TeamHGSTalentContest.Pages
 {
     public class ThankYouModel : PageModel
     {
-        private readonly TeamHGSTalentContest.Data.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public ThankYouModel(TeamHGSTalentContest.Data.ApplicationDbContext context)
+        public ThankYouModel(ApplicationDbContext context)
         {
             _context = context;
         }
