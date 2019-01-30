@@ -61,6 +61,20 @@ namespace TeamHGSTalentContest.ViewModels
         [Display(Name="Image Release Consent")]
         public bool ImageConsent { get; set; }
 
+        [Display(Name="Your Rank")]
+        public int UserRank { get; set; }
+
+        public int UserRankId { get; set; }
+
+
+        [Display(Name="Ranked Average")]
+        [DisplayFormat(DataFormatString = "{0:##.##}")]
+        public double RankingAverage { get; set; }
+
+        [Display(Name="# Times Ranked")]
+        public int RankedCount { get; set; }
+
+
         public bool Archive { get; set; }
     }
 }

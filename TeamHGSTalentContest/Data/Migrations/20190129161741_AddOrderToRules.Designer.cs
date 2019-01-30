@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeamHGSTalentContest.Data;
 
 namespace TeamHGSTalentContest.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190129161741_AddOrderToRules")]
+    partial class AddOrderToRules
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -257,31 +259,6 @@ namespace TeamHGSTalentContest.Data.Migrations
                     b.ToTable("Locations");
                 });
 
-            modelBuilder.Entity("TeamHGSTalentContest.Models.Rank", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime?>("DateCreated");
-
-                    b.Property<DateTime?>("DateModified");
-
-                    b.Property<string>("RankedBy");
-
-                    b.Property<Guid>("StringId");
-
-                    b.Property<int>("SubmissionId");
-
-                    b.Property<int>("Value");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SubmissionId");
-
-                    b.ToTable("Rankings");
-                });
-
             modelBuilder.Entity("TeamHGSTalentContest.Models.Rule", b =>
                 {
                     b.Property<int>("Id")
@@ -330,8 +307,6 @@ namespace TeamHGSTalentContest.Data.Migrations
                     b.Property<string>("ManagerName");
 
                     b.Property<string>("PhoneNumber");
-
-                    b.Property<double>("RankAverage");
 
                     b.Property<Guid>("StringId")
                         .ValueGeneratedOnAdd()
@@ -390,14 +365,6 @@ namespace TeamHGSTalentContest.Data.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("TeamHGSTalentContest.Models.Rank", b =>
-                {
-                    b.HasOne("TeamHGSTalentContest.Models.Submission", "Submission")
-                        .WithMany("Rankings")
-                        .HasForeignKey("SubmissionId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

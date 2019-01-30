@@ -23,7 +23,7 @@ namespace TeamHGSTalentContest.Pages.Faqs
 
         public async Task OnGetAsync()
         {
-            Faq = await _context.Faqs.ToListAsync();
+            Faq = await _context.Faqs.OrderBy(r => r.Order).ToListAsync();
         }
     }
 }

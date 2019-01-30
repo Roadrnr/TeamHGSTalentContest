@@ -24,8 +24,8 @@ namespace TeamHGSTalentContest.Pages
         }
         public async Task<IActionResult> OnGet()
         {
-            Faqs = await _context.Faqs.Where(c => c.IsPublic).ToListAsync();
-            Rules = await _context.Rules.ToListAsync();
+            Faqs = await _context.Faqs.Where(c => c.IsPublic).OrderBy(c => c.Order).ToListAsync();
+            Rules = await _context.Rules.OrderBy(c => c.Order).ToListAsync();
             Body = await _context.ContestInfo.Select(c => c.Body).LastOrDefaultAsync();
             return Page();
         }

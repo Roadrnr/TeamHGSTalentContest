@@ -18,6 +18,11 @@
                 <input asp-for="Rule.Name" class="form-control" />
                 <span asp-validation-for="Rule.Name" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="Rule.Order" class="control-label font-weight-bold"></label>
+                <input asp-for="Rule.Order" class="form-control" />
+                <span asp-validation-for="Rule.Order" class="text-danger"></span>
+            </div>
             <input type="hidden" asp-for="Rule.Id" />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

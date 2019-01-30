@@ -11,25 +11,48 @@
 <div class="card-columns mt-4">
     @foreach (var item in Model.Submission)
     {
-        <div class="card" style="width: 20rem;">
-            <video controls class="card-img-top">
+        <div class="card" style="width: 30rem;">
+            <video controls="controls" id="@item.Id" class="card-img-top">
+                <source src="@Html.DisplayFor(modelItem => item.FileName)" type="video/webm">
                 <source src="@Html.DisplayFor(modelItem => item.FileName)" type="video/mp4">
+                <source src="@Html.DisplayFor(modelItem => item.FileName)" type="video/ogg">
+                <source src="@Html.DisplayFor(modelItem => item.FileName)" type="video/m4v">
+                <source src="@Html.DisplayFor(modelItem => item.FileName)" type="video/mpeg">
+                <source src="@Html.DisplayFor(modelItem => item.FileName)" type="video/quicktime">
+
                 Your browser does not support the video tag.
             </video>
-            <div class="card-body">
-                <h5 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h5>
+            <div class="card-body py-0">
+                <label asp-for="@item.UserRank">Rank this Entry: (1 - 10, 10 being outstanding)</label>
+                <input type="hidden" id="ID_@(item.Id)_UserRankId" value="@(item.UserRankId)"/>
+                <select asp-for="@item.UserRank" id="ID_@(item.Id)_UserRank_@(item.UserRank)" class="userRank">
+                    <option value="0"> - </option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+                <h5 class="card-title mb-0 pb-0">@Html.DisplayFor(modelItem => item.Name) (@Html.DisplayFor(modelItem => item.LocationName))</h5>
                 <p class="card-text">
-                    <a href="mailto:@Html.Raw(item.Email)">@Html.DisplayFor(modelItem => item.Email)</a>
+                    <a href="mailto:@Html.Raw(item.Email)">@Html.DisplayFor(modelItem => item.Email)</a><br/>
+                    Phone: <a href="tel:@Html.DisplayFor(modelItem => item.PhoneNumber)">@Html.DisplayFor(modelItem => item.PhoneNumber)</a>
                 </p>
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">Location: @Html.DisplayFor(modelItem => item.LocationName)</li>
-                <li class="list-group-item">Manager: @Html.DisplayFor(modelItem => item.ManagerName)</li>
-                <li class="list-group-item">Phone: <a href="tel:@Html.DisplayFor(modelItem => item.PhoneNumber)">@Html.DisplayFor(modelItem => item.PhoneNumber)</a></li>
-                <li class="list-group-item">Submitted On: @Html.DisplayFor(modelItem => item.DateCreated)</li>
-                <li class="list-group-item">Image Release: @(item.ImageConsent ? "Yes" : "No")</li>
+                <li class="list-group-item py-0"><a href="@Html.DisplayFor(modelItem => item.FileName)">Link to entry video</a></li>
+                <li class="list-group-item py-0">Manager: @Html.DisplayFor(modelItem => item.ManagerName)</li>
+                <li class="list-group-item py-0">Submitted On: @Html.DisplayFor(modelItem => item.DateCreated)</li>
+                <li class="list-group-item py-0">Image Release: @(item.ImageConsent ? "Yes" : "No")</li>
+                <li class="list-group-item py-0" id="rankingFor_@item.Id">Average Ranking: @Html.DisplayTextFor(modelItem => item.RankingAverage) <span>|</span> Ranked @Html.DisplayTextFor(modelItem => item.RankedCount) @(item.RankedCount != 1 ? "times" : "time").</li>
             </ul>
-            <div class="card-body">
+            <div class="card-body py-0">
+                <h6 class="p-0 m-0">Talent Description:</h6>
                 @if (string.IsNullOrEmpty(item.Talent))
                 {
                     <span>No talent description provided.</span>
@@ -42,14 +65,83 @@
             <div class="card-footer">
                 @if (item.Archive)
                 {
-                    <a asp-page-handler="Restore" asp-route-id="@item.Id">Restore This Entry</a> <span>|</span>
+                    <a asp-page-handler="Restore" asp-route-id="@item.Id">Restore This Entry</a>
                 }
                 else
                 {
-                    <a asp-page-handler="Archive" asp-route-id="@item.Id">Archive This Entry</a> <span>|</span>
+                    <a asp-page-handler="Archive" asp-route-id="@item.Id">Archive This Entry</a>
                 }
-                <a asp-page-handler="Delete" asp-route-id="@item.Id">Delete This Entry</a>
+                @* <span>|</span> <a asp-page-handler="Delete" asp-route-id="@item.Id">Delete This Entry</a>*@
             </div>
         </div>
     }
 </div>
+@section scripts {
+<script>
+    $(document).on("change", ".userRank", function () {
+        let newValue = parseInt($(this).val());
+        console.log(`selected value is: ${newValue}`);
+        let thisId = $(this).attr("id");
+        let itemId = parseInt(thisId.split("_")[1]);
+        console.log(`itemId: ${itemId}`);
+        let userRankId = parseInt($(`#ID_${itemId}_UserRankId`).val());
+        console.log(`UserRankId: ${userRankId}`);
+
+        if (userRankId > 0) {
+            putRank(itemId, userRankId, newValue);
+        } else {
+            postRank(itemId, newValue);
+        }
+    });
+
+    function putRank(itemId, userRankId, newRank) {
+        $.ajax({
+            method: "PUT",
+            url: `/api/Rank/${userRankId}`,
+            data: {
+                value: newRank,
+            },
+            success: function(results) {
+                console.log(results);
+                let timeString = "times";
+                if (results.rankCount == 1) {
+                    timeString = "time";
+                }
+                let htmlString = `Average Ranking: ${results.average} <span>|</span> Ranked ${results.rankCount} ${timeString}.`;
+                $(`#rankingFor_${itemId}`).html(htmlString);
+
+            },
+            error: function(jqXhr, exception) {
+                console.error(jqXhr, exception);
+            }
+        });
+    }
+
+    function postRank(itemId, newRank) {
+        $.ajax({
+            method: "POST",
+            url: `/api/Rank/`,
+            data: {
+                submissionId: itemId,
+                value: newRank,
+            },
+            success: function(results) {
+                console.log(results);
+                $(`#ID_${results.submissionId}_UserRankId`).val(results.userRankId);
+
+                let timeString = "times";
+                if (results.rankCount == 1) {
+                    timeString = "time";
+                }
+                let htmlString = `Average Ranking: ${results.average} <span>|</span> Ranked ${results.rankCount} ${timeString}.`;
+                $(`#rankingFor_${itemId}`).html(htmlString);
+
+            },
+            error: function(jqXhr, exception) {
+                console.error(jqXhr, exception);
+            }
+        });
+    }
+
+</script>
+}

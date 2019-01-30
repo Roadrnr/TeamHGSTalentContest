@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TeamHGSTalentContest.Data;
@@ -12,9 +10,9 @@ namespace TeamHGSTalentContest.Pages.Rules
 {
     public class IndexModel : PageModel
     {
-        private readonly TeamHGSTalentContest.Data.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public IndexModel(TeamHGSTalentContest.Data.ApplicationDbContext context)
+        public IndexModel(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -23,7 +21,7 @@ namespace TeamHGSTalentContest.Pages.Rules
 
         public async Task OnGetAsync()
         {
-            Rule = await _context.Rules.ToListAsync();
+            Rule = await _context.Rules.OrderBy(c => c.Order).ToListAsync();
         }
     }
 }

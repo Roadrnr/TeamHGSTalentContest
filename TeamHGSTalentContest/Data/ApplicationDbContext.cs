@@ -24,6 +24,8 @@ namespace TeamHGSTalentContest.Data
         public DbSet<Rule> Rules { get; set; }
         public DbSet<ContestInfo> ContestInfo { get; set; }
 
+        public DbSet<Rank> Rankings { get; set; }
+
         public override int SaveChanges()
         {
             AddTimestamps();

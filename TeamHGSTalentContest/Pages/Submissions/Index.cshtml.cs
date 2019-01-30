@@ -45,6 +45,27 @@ namespace TeamHGSTalentContest.Pages.Submissions
                 ImageConsent = e.ImageConsent,
                 Archive = e.Archive
             }).OrderByDescending(e => e.DateCreated).ToList();
+
+            foreach(var entry in vm)
+            {
+                var avg = 0.00;
+                var rankCount = 0;
+                var values = await _context.Rankings.Where(r => r.SubmissionId == entry.Id).ToListAsync();
+                if(values.Count > 0)
+                {
+                    rankCount = values.Count;
+                    avg = values.Select(r => r.Value).Average();
+
+                    var userRank = values.Where(r => r.RankedBy == User.Identity.Name).SingleOrDefault();
+                    if(userRank != null)
+                    {
+                        entry.UserRank = userRank.Value;
+                        entry.UserRankId = userRank.Id;
+                    }
+                }
+                entry.RankingAverage = avg;
+                entry.RankedCount = rankCount;
+            }
             Submission = vm;
         }
 

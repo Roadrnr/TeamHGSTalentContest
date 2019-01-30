@@ -1,4 +1,6 @@
-﻿namespace TeamHGSTalentContest.Models
+﻿using System.Collections.Generic;
+
+namespace TeamHGSTalentContest.Models
 {
     public class Submission : BaseEntity
     {
@@ -15,6 +17,11 @@
         public bool ImageConsent { get; set; }
 
         public bool Archive { get; set; }
+
+        public double RankAverage { get; set; }
+
+        public List<Rank> Rankings { get; set; }
+
 
     }
 }
