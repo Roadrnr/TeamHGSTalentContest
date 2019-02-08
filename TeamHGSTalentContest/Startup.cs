@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +40,8 @@ namespace TeamHGSTalentContest
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
+
             services.AddTransient<IAzureStorageService, AzureStorageService>();
             services.AddMvc()
                 .AddRazorPagesOptions(options =>
@@ -51,6 +54,11 @@ namespace TeamHGSTalentContest
                     options.Conventions.AuthorizePage("/Identity/Account/Register");
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.Configure<FormOptions>(x =>
+            {
+                x.ValueLengthLimit = int.MaxValue;
+                x.MultipartBodyLengthLimit = int.MaxValue; // In case of multipart
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -76,6 +84,7 @@ namespace TeamHGSTalentContest
             app.UseAuthentication();
             ApplicationDbInitializer.SeedData(userManager, roleManager).Wait();
             app.UseMvc();
+
         }
     }
 }

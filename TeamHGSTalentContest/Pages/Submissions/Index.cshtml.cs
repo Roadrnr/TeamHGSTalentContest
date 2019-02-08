@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -42,6 +43,8 @@ namespace TeamHGSTalentContest.Pages.Submissions
                 Id = e.Id,
                 LocationName = e.Location.Name,
                 ImageConsent = e.ImageConsent,
+                EmployeeId = e.EmployeeId,
+                ContestConsent = e.ContestConsent,
                 Archive = e.Archive
             }).OrderByDescending(e => e.DateCreated).ToList();
 
@@ -84,6 +87,8 @@ namespace TeamHGSTalentContest.Pages.Submissions
                 Id = e.Id,
                 LocationName = e.Location.Name,
                 ImageConsent = e.ImageConsent,
+                ContestConsent = e.ContestConsent,
+                EmployeeId = e.EmployeeId,
                 Archive = e.Archive
             }).OrderByDescending(e => e.DateCreated).ToList();
             Submission = vm;
@@ -96,7 +101,7 @@ namespace TeamHGSTalentContest.Pages.Submissions
             _context.Update(archiveEntry);
             await _context.SaveChangesAsync();
             _logger.LogInformation($"{User.Identity.Name} archived entryid: {archiveEntry.Id}");
-            return RedirectToAction(nameof(OnGetAsync));
+            return RedirectToPage("./Index");
         }
 
         public async Task<IActionResult> OnGetRestoreAsync(int id)
@@ -106,25 +111,28 @@ namespace TeamHGSTalentContest.Pages.Submissions
             _context.Update(archiveEntry);
             await _context.SaveChangesAsync();
             _logger.LogInformation($"{User.Identity.Name} restored entryid:{archiveEntry.Id}");
-            return RedirectToAction(nameof(OnGetAsync));
+            return RedirectToPage("./Index");
         }
 
         public async Task<IActionResult> OnGetDeleteAsync(int id)
         {
             var archiveEntry = await _context.Submissions.SingleOrDefaultAsync(c => c.Id == id);
-            var result = await _storage.DeleteFile(archiveEntry.FileName, "talentcontest");
-            if (result)
-            {
-                _logger.LogInformation($"{User.Identity.Name} deleted {archiveEntry.FileName} from Azure");
-            } else
-            {
-                _logger.LogWarning($"{User.Identity.Name} Unsuccessfully deleted {archiveEntry.FileName} from Azure");
-            }
+            var fileUrl = new Uri(archiveEntry.FileName);
+                var fileName = System.IO.Path.GetFileName(fileUrl.LocalPath);
+                var result = await _storage.DeleteFile(fileName, "talentcontest");
+                if (result)
+                {
+                    _logger.LogInformation($"{User.Identity.Name} deleted {archiveEntry.FileName} from Azure");
+                }
+                else
+                {
+                    _logger.LogWarning($"{User.Identity.Name} Unsuccessfully deleted {archiveEntry.FileName} from Azure");
+                }
             
             _context.Remove(archiveEntry);
             await _context.SaveChangesAsync();
             _logger.LogInformation($"{User.Identity.Name} deleted entryId: {archiveEntry.Id}");
-            return RedirectToAction(nameof(OnGetAsync));
+            return RedirectToPage("./Index");
         }
 
     }

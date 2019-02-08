@@ -11,11 +11,13 @@ namespace TeamHGSTalentContest.Models
         public int LocationId { get; set; }
         public Location Location { get; set; }
         public string Email { get; set; }
+        public string EmployeeId { get; set; }
+
         public string PhoneNumber { get; set; }
         public string Talent { get; set; }
         public string FileName { get; set; }
         public bool ImageConsent { get; set; }
-
+        public bool ContestConsent { get; set; }
         public bool Archive { get; set; }
 
         public double RankAverage { get; set; }

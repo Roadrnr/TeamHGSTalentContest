@@ -6,12 +6,15 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TeamHGSTalentContest.Data;
+using TeamHGSTalentContest.Filters;
 using TeamHGSTalentContest.Models;
 using TeamHGSTalentContest.Services;
 using TeamHGSTalentContest.ViewModels;
 
 namespace TeamHGSTalentContest.Pages
 {
+    [GenerateAntiforgeryTokenCookieForAjax]
+    [RequestSizeLimit(1_000_000_000)]
     public class CreateModel : PageModel
     {
         private readonly ApplicationDbContext _context;
@@ -23,6 +26,7 @@ namespace TeamHGSTalentContest.Pages
             _storage = storage;
         }
 
+        
         public async Task<IActionResult> OnGet()
         {
             var locations = await _context.Locations.OrderBy(e => e.Name).ToListAsync();
@@ -30,9 +34,11 @@ namespace TeamHGSTalentContest.Pages
             return Page();
         }
 
+        
         [BindProperty]
         public SubmissionViewModel Submission { get; set; }
 
+        
         public async Task<IActionResult> OnPostAsync()
         {
             var supportedTypes = new[] { "mp4", "webm", "ogg"};
@@ -56,8 +62,10 @@ namespace TeamHGSTalentContest.Pages
                 return Page();
             }
 
+            var contentType = Submission.FormFile.ContentType;
+            var uploadFile = Submission.FormFile.OpenReadStream();
             var fileName =
-                await _storage.StoreAndGetFile(Submission.FormFile.FileName, "talentcontest", Submission.FormFile);
+                await _storage.StoreAndGetFile(Submission.FormFile.FileName, "talentcontest", contentType, uploadFile);
             Submission.FileName = fileName;
 
             var sub = new Submission
@@ -70,7 +78,9 @@ namespace TeamHGSTalentContest.Pages
                 PhoneNumber = Submission.PhoneNumber,
                 FileName = fileName,
                 Talent = Submission.Talent,
-                ImageConsent = Submission.ImageConsent
+                ImageConsent = Submission.ImageConsent,
+                ContestConsent = Submission.ContestConsent,
+                EmployeeId = Submission.EmployeeId
             };
             _context.Submissions.Add(sub);
             await _context.SaveChangesAsync();

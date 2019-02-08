@@ -8,7 +8,7 @@ namespace TeamHGSTalentContest.Services
     public interface IAzureStorageService
     {
         Task<string> StoreAndGetFile(string filename, string containerName, IFormFile image);
-        Task<string> StoreAndGetFile(string filename, string containerName, FileContentResult file);
+        Task<string> StoreAndGetFile(string filename, string containerName, string contentType, Stream file);
         Task StoreFile(string filename, IFormFile image);
         Task StoreFile(string filename, string containerName, IFormFile image);
         Task<string> GetFile(string filename, string containerName);

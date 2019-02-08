@@ -38,6 +38,11 @@ namespace TeamHGSTalentContest.ViewModels
         public string Email { get; set; }
 
         [Required]
+        [Display(Name="Employee ID")]
+        public string EmployeeId { get; set; }
+
+
+        [Required]
         [Phone]
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
@@ -60,6 +65,11 @@ namespace TeamHGSTalentContest.ViewModels
         [Range(typeof(bool), "true", "true", ErrorMessage = "You must consent to the image release...")]
         [Display(Name="Image Release Consent")]
         public bool ImageConsent { get; set; }
+
+        [Required]
+        [Range(typeof(bool), "true", "true", ErrorMessage = "You must consent to the contest release form...")]
+        [Display(Name = "Contest Release Form")]
+        public bool ContestConsent { get; set; }
 
         [Display(Name="Your Rank")]
         public int UserRank { get; set; }

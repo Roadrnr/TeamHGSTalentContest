@@ -122,7 +122,7 @@ namespace TeamHGSTalentContest.Services
             return uploadFile.Uri.ToString();
         }
 
-        public async Task<string> StoreAndGetFile(string filename, string container, FileContentResult file)
+        public async Task<string> StoreAndGetFile(string filename, string container, string contentType, Stream file)
         {
             await GetContainer(container);
             // Get a reference to a blob named filename.
@@ -131,19 +131,18 @@ namespace TeamHGSTalentContest.Services
             if (await uploadFile.ExistsAsync())
             {
                 await uploadFile.FetchAttributesAsync();
-                if (uploadFile.Properties.Length == file.FileContents.Length)
+                if (uploadFile.Properties.Length == file.Length)
                 {
                     uploadFile = _container.GetBlockBlobReference(filename.GetUniqueName());
                 }
             }
 
-            uploadFile.Properties.ContentType = file.ContentType;
+            uploadFile.Properties.ContentType = contentType;
 
             // Create or overwrite the filename blob with the contents of a local file
             // named filename.
-
-            await uploadFile.UploadFromByteArrayAsync(file.FileContents, 0, file.FileContents.Length);
-
+            await uploadFile.UploadFromStreamAsync(file);
+            //await uploadFile.UploadFromByteArrayAsync(file.FileContents, 0, file.FileContents.Length);
             return uploadFile.Uri.ToString();
         }
 

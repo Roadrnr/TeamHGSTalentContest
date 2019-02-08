@@ -37,6 +37,11 @@
                 </div>
                 <div class="row py-md-2">
                     <div class="col-sm py-sm-2">
+                        <label asp-for="Submission.EmployeeId"></label>
+                        <input asp-for="Submission.EmployeeId" class="form-control" />
+                        <span asp-validation-for="Submission.EmployeeId" class="text-danger"></span>
+                    </div>
+                    <div class="col-sm py-sm-2">
                         <label asp-for="Submission.ManagerName"></label>
                         <input asp-for="Submission.ManagerName" class="form-control" />
                         <span asp-validation-for="Submission.ManagerName" class="text-danger"></span>
@@ -71,15 +76,31 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" asp-for="Submission.ImageConsent">
                             <label class="form-check-label" asp-for="Submission.ImageConsent">
-                                <small>I consent to give HGS the right to use the content submitted in accordance with HGS Image Release Disclaimer. <a href="#" class="m-0 p-0" data-toggle="modal" data-target="#exampleModal">Read more...</a></small>
-                            </label>
+                                <small>
+                                    I consent to give HGS the right to use the content submitted in accordance with the HGS Image Release Disclaimer. <br />
+                                    <a href="#" class="m-0 p-0" data-toggle="modal" data-target="#exampleModal">Read more...</a>
+                                </small>
+                            </label><br />
                             <span asp-validation-for="Submission.ImageConsent" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
                 <div class="row py-md-2">
+                    <div class="col-sm py-4 py-sm-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" asp-for="Submission.ContestConsent">
+                            <label class="form-check-label" asp-for="Submission.ContestConsent">
+                                <small>
+                                    I consent to the HGS Has Talent Release Form. <a href="#" class="m-0 p-0" data-toggle="modal" data-target="#consentModal">Read more...</a>
+                                </small>
+                            </label><br />
+                            <span asp-validation-for="Submission.ContestConsent" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row py-md-2">
                     <div class="col-sm py-sm-2">
-                        <input type="submit" value="Submit" class="btn btn-primary" />
+                        <input id="submitBtn" type="submit" value="Submit" class="btn btn-primary" />
                         <span class="pleaseWait text-warning"></span>
                     </div>
                 </div>
@@ -99,8 +120,8 @@
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Image Release Disclaimer</h5>
+            <div class="modal-header" style="background-color: #0E3E7C;">
+                <h5 class="modal-title text-light" id="exampleModalLabel">Image Release Disclaimer</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -114,13 +135,36 @@
                 <p>I further acknowledge that my participation is voluntary and that I will not receive financial compensation of any type associated with the taking or publication of these photographs, or participation in the company’s marketing materials or other company publications.</p>
                 <p>I hereby affirm that I am over the age of 18 and have the right to contract in my own name. I have read the above authorization, release and agreement, prior to its execution; I fully understand the contents thereof.</p>
                 <p>This agreement shall be binding upon me and my heirs, legal representatives and assigns.</p>
-                </div>
+            </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="consentModal" tabindex="-1" role="dialog" aria-labelledby="consentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #0E3E7C;">
+                <h5 class="modal-title text-light" id="consentModalLabel">HGS Has Talent Release</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>In consideration for the opportunity to participate as a contestant in the HGS Has Talent competition, I agree that if chosen to compete in the final competition located in Las Vegas, NV on April 7, 2019, I do so on an entirely voluntary basis. I understand that HGS (Hinduja Global Solutions) will compensate me only for the regular hours that I am typically scheduled to work during such time period. I understand and acknowledge that any time outside of my regularly scheduled work hours that I spend traveling to/from and attending the HGS Has Talent competition will not be compensated by HGS.</p>
+                <p>I further agree that by choosing to participate in the HGS Has Talent competition, I understand that all contestants will be treated fairly and consistently without regard to race, gender, national origin, religion, sexual orientation, or color. I will accept all decisions that are made by the competition’s officials and judges. I expressly release HGS from all liability for any claims that I or any third-party may have in connection with my participation in the HGS Has Talent competition.</p>
+                <p>I confirm that, as a contestant in the HGS Has Talent competition, I will not display or communicate any content that could be perceived or interpreted as inappropriate and offensive to the competition’s audience and employees.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
@@ -130,27 +174,32 @@
                 var fileName = $(this).val().replace("C:\\fakepath\\", "");;
                 //replace the "Choose a file" label
                 $('.custom-file-label').html(fileName);
+        });
+
+            $('input:submit').click(function (e) {
+                e.preventDefault();
+                var form = $("#EntryForm");
+                //console.log(form);
+                
+                //var formData = new FormData(form[0]);
+                //console.log(formData);
+                if (form.valid()) {
+                    console.log("Form is valid");
+                    $(this).val('Loading...');
+                    $('.pleaseWait').html("Please be patient. This may take a few minutes depending on the file size.");
+                    $(this).attr('disabled', 'disabled');
+                    $(this).parents('form').submit();
+                    //CreateSubmission(form);
+                }
             });
 
         $(function() {
-            $('input:submit').click(function () {
-                var form = $("#EntryForm");
-                if (form.valid()) {
-                $(this).val('Loading...');
-                $('.pleaseWait').html("Please be patient. This may take a few minutes depending on the file size.");
-                $(this).attr('disabled', 'disabled');
-                $(this).parents('form').submit();
-            }
-        });
-    });
-
-        $(function () { 
-            $('input:submit').removeAttr('disabled'); 
+            $('input:submit').removeAttr('disabled');
         });
 
         // extend jquery range validator to work for required checkboxes
         var defaultRangeValidator = $.validator.methods.range;
-        $.validator.methods.range = function (value, element, param) {
+        $.validator.methods.range = function(value, element, param) {
             if (element.type === 'checkbox') {
                 // if it's a checkbox return true if it is checked
                 return element.checked;
@@ -158,6 +207,42 @@
                 // otherwise run the default validation function
                 return defaultRangeValidator.call(this, value, element, param);
             }
+        }
+
+        function CreateSubmission() {
+            //var entry = new FormData(form);
+            //console.log(entry);
+            //jQuery.each(jQuery('#Submission_FormFile')[0].files, function(i, file) {
+            //    entry.append('file-'+i, file);
+            //});
+
+        //    const entry = {
+        //        firstName: $('#Submission_FirstName').val(),
+        //    lastName: $('#Submission_LastName').val(),
+        //    email: $('#Submission_Email').val(),
+        //    managerName: $('#Submission_ManagerName').val(),
+        //    locationId: $('#Submission_LocationId').val(),
+        //    phoneNumber: $('#Submission_PhoneNumber').val(),
+        //    fileName: $('#Submission_FormFile').val(),
+        //    talent: $('#Submission_Talent').val(),
+        //    imageConsent: $('#Submission_ImageConsent').val(),
+        //    contestConsent: $('#Submission_ContestConsent').val(),
+        //    employeeId: $('#Submission_EmployeeId').val()
+        //};
+            //console.log(entry);
+        //$.ajax({
+        //    method: "POST",
+        //    url: `/api/Entry/`,
+        //    data: entry,
+            
+        //    success: function(results) {
+        //        console.log(results);
+
+        //    },
+        //    error: function(jqXhr, exception) {
+        //        console.error(jqXhr, exception);
+        //    }
+        //});
         }
     </script>
 }
