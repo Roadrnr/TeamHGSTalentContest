@@ -176,22 +176,17 @@
                 $('.custom-file-label').html(fileName);
         });
 
-            $('input:submit').click(function (e) {
-                e.preventDefault();
-                var form = $("#EntryForm");
-                //console.log(form);
-                
-                //var formData = new FormData(form[0]);
-                //console.log(formData);
-                if (form.valid()) {
-                    console.log("Form is valid");
-                    $(this).val('Loading...');
-                    $('.pleaseWait').html("Please be patient. This may take a few minutes depending on the file size.");
-                    $(this).attr('disabled', 'disabled');
-                    $(this).parents('form').submit();
-                    //CreateSubmission(form);
-                }
-            });
+        $('input:submit').click(function (e) {
+            e.preventDefault();
+            var form = $("#EntryForm");
+            
+            if (form.valid()) {
+                $(this).val('Loading...');
+                $('.pleaseWait').html("Please be patient. This may take a few minutes depending on the file size.");
+                $(this).attr('disabled', 'disabled');
+                $(this).parents('form').submit();
+            }
+        });
 
         $(function() {
             $('input:submit').removeAttr('disabled');
@@ -209,40 +204,5 @@
             }
         }
 
-        function CreateSubmission() {
-            //var entry = new FormData(form);
-            //console.log(entry);
-            //jQuery.each(jQuery('#Submission_FormFile')[0].files, function(i, file) {
-            //    entry.append('file-'+i, file);
-            //});
-
-        //    const entry = {
-        //        firstName: $('#Submission_FirstName').val(),
-        //    lastName: $('#Submission_LastName').val(),
-        //    email: $('#Submission_Email').val(),
-        //    managerName: $('#Submission_ManagerName').val(),
-        //    locationId: $('#Submission_LocationId').val(),
-        //    phoneNumber: $('#Submission_PhoneNumber').val(),
-        //    fileName: $('#Submission_FormFile').val(),
-        //    talent: $('#Submission_Talent').val(),
-        //    imageConsent: $('#Submission_ImageConsent').val(),
-        //    contestConsent: $('#Submission_ContestConsent').val(),
-        //    employeeId: $('#Submission_EmployeeId').val()
-        //};
-            //console.log(entry);
-        //$.ajax({
-        //    method: "POST",
-        //    url: `/api/Entry/`,
-        //    data: entry,
-            
-        //    success: function(results) {
-        //        console.log(results);
-
-        //    },
-        //    error: function(jqXhr, exception) {
-        //        console.error(jqXhr, exception);
-        //    }
-        //});
-        }
     </script>
 }

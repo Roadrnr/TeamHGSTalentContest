@@ -14,7 +14,7 @@ using TeamHGSTalentContest.ViewModels;
 namespace TeamHGSTalentContest.Pages
 {
     [GenerateAntiforgeryTokenCookieForAjax]
-    [RequestSizeLimit(1_000_000_000)]
+    [RequestSizeLimit(1_073_741_824)]
     public class CreateModel : PageModel
     {
         private readonly ApplicationDbContext _context;
@@ -53,6 +53,11 @@ namespace TeamHGSTalentContest.Pages
                 ModelState.AddModelError("Submission.ImageConsent", "You must agree to the image consent.");
             }
 
+            if (!Submission.ContestConsent)
+            {
+                ModelState.AddModelError("Submission.ContestConsent", "You must agree to the contest consent.");
+            }
+
             if (!ModelState.IsValid)
             {
                 Submission.FileName = Submission.FormFile.FileName;
@@ -63,11 +68,13 @@ namespace TeamHGSTalentContest.Pages
             }
 
             var contentType = Submission.FormFile.ContentType;
-            var uploadFile = Submission.FormFile.OpenReadStream();
-            var fileName =
-                await _storage.StoreAndGetFile(Submission.FormFile.FileName, "talentcontest", contentType, uploadFile);
-            Submission.FileName = fileName;
-
+            using (var fileStream = Submission.FormFile.OpenReadStream())
+            {
+                var fileName =
+                    await _storage.StoreAndGetFile(Submission.FormFile.FileName, "talentcontest", contentType, fileStream);
+                Submission.FileName = fileName;
+            }
+            
             var sub = new Submission
             {
                 FirstName = Submission.FirstName,
@@ -76,7 +83,7 @@ namespace TeamHGSTalentContest.Pages
                 ManagerName = Submission.ManagerName,
                 LocationId = Submission.LocationId,
                 PhoneNumber = Submission.PhoneNumber,
-                FileName = fileName,
+                FileName = Submission.FileName,
                 Talent = Submission.Talent,
                 ImageConsent = Submission.ImageConsent,
                 ContestConsent = Submission.ContestConsent,
