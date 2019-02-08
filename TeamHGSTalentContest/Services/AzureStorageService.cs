@@ -3,10 +3,9 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace TeamHGSTalentContest.Services
@@ -15,14 +14,14 @@ namespace TeamHGSTalentContest.Services
     {
         private readonly CloudStorageAccount _storageAccount;
         private readonly IConfiguration _config;
+        private readonly ILogger<AzureStorageService> _logger;
         private CloudBlobContainer _container;
 
-        public AzureStorageService(IConfiguration config)
+        public AzureStorageService(IConfiguration config, ILogger<AzureStorageService> logger)
         {
             _config = config;
-            _storageAccount = new CloudStorageAccount(
-                new StorageCredentials(_config["Azure:AccountName"], _config["Azure:AccountKey"]), true);
-            
+            _logger = logger;
+            _storageAccount = CloudStorageAccount.Parse(_config["Azure:ConnectionString"]);
         }
 
         private async Task GetContainer(string containerName)
@@ -40,6 +39,7 @@ namespace TeamHGSTalentContest.Services
                 {
                     PublicAccess = BlobContainerPublicAccessType.Blob
                 });
+                _logger.LogInformation($"Container created with name: {containerName}.");
             }
         }
 
@@ -133,7 +133,9 @@ namespace TeamHGSTalentContest.Services
                 await uploadFile.FetchAttributesAsync();
                 if (uploadFile.Properties.Length == file.Length)
                 {
-                    uploadFile = _container.GetBlockBlobReference(filename.GetUniqueName());
+                    var newFileName = filename.GetUniqueName();
+                    uploadFile = _container.GetBlockBlobReference(newFileName);
+                    _logger.LogInformation($"Upload file renamed to: {newFileName}.");
                 }
             }
 
@@ -142,7 +144,7 @@ namespace TeamHGSTalentContest.Services
             // Create or overwrite the filename blob with the contents of a local file
             // named filename.
             await uploadFile.UploadFromStreamAsync(file);
-            //await uploadFile.UploadFromByteArrayAsync(file.FileContents, 0, file.FileContents.Length);
+            _logger.LogInformation($"SUCCESS, file uploaded: {uploadFile.Uri}.");
             return uploadFile.Uri.ToString();
         }
 

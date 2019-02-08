@@ -35,7 +35,7 @@ namespace TeamHGSTalentContest.api
         // POST api/<controller>
         [HttpPost]
         [DisableFormValueModelBinding]
-
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Post()
         {
             if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
