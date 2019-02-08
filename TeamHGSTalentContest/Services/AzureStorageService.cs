@@ -21,7 +21,7 @@ namespace TeamHGSTalentContest.Services
         {
             _config = config;
             _logger = logger;
-            _storageAccount = CloudStorageAccount.Parse(_config.GetConnectionString("StorageConnection"));
+            _storageAccount = CloudStorageAccount.Parse(_config["Azure:ConnectionString"]);
         }
 
         private async Task GetContainer(string containerName)
