@@ -41,11 +41,11 @@ namespace TeamHGSTalentContest.Pages
         
         public async Task<IActionResult> OnPostAsync()
         {
-            var supportedTypes = new[] { "mp4", "webm", "ogg"};
+            var supportedTypes = new[] { "mp4", "webm", "ogg", "mov", "mkv", "avi", "wmv", "m4v"};
             var fileExt = Path.GetExtension(Submission.FormFile.FileName).Substring(1);
             if (!supportedTypes.Contains(fileExt))
             {
-                ModelState.AddModelError("Submission.FileName","File must be in mp4, webm, or ogg format.");
+                ModelState.AddModelError("Submission.FileName","File must be in mp4, m4v, wmv, avi, mkv, mov, webm, or ogg format.");
             }
 
             if (!Submission.ImageConsent)
