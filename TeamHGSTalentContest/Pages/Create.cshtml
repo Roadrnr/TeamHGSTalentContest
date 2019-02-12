@@ -104,6 +104,14 @@
                         <span class="pleaseWait text-warning"></span>
                     </div>
                 </div>
+                <div> Uploaded Bytes: <font id="read"> </font> </div> 
+                <div class="progress">
+                    <div id="progress" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                        0%
+                    </div>
+                </div>
+
+                <div id="result"></div>
             </form>
         </div>
     </div>
@@ -167,6 +175,8 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/azure-storage.blob.min.js"></script>
+
     <script>
         $('#Submission_FormFile').on('change',
             function() {
@@ -174,24 +184,24 @@
                 var fileName = $(this).val().replace("C:\\fakepath\\", "");;
                 //replace the "Choose a file" label
                 $('.custom-file-label').html(fileName);
-        });
-
-            $('input:submit').click(function (e) {
-                e.preventDefault();
-                var form = $("#EntryForm");
-                //console.log(form);
-                
-                //var formData = new FormData(form[0]);
-                //console.log(formData);
-                if (form.valid()) {
-                    console.log("Form is valid");
-                    $(this).val('Loading...');
-                    $('.pleaseWait').html("Please be patient. This may take a few minutes depending on the file size.");
-                    $(this).attr('disabled', 'disabled');
-                    $(this).parents('form').submit();
-                    //CreateSubmission(form);
-                }
             });
+
+        //$('input:submit').click(function (e) {
+        //    e.preventDefault();
+        //    var form = $("#EntryForm");
+        //    //console.log(form);
+
+        //    //var formData = new FormData(form[0]);
+        //    //console.log(formData);
+        //    if (form.valid()) {
+        //        console.log("Form is valid");
+        //        $(this).val('Loading...');
+        //        $('.pleaseWait').html("Please be patient. This may take a few minutes depending on the file size.");
+        //        $(this).attr('disabled', 'disabled');
+        //        $(this).parents('form').submit();
+        //        //CreateSubmission(form);
+        //    }
+        //});
 
         $(function() {
             $('input:submit').removeAttr('disabled');
@@ -209,40 +219,60 @@
             }
         }
 
+        const account = {
+            name: "ptslmanager",
+            sas: "se=2019-12-31&sp=rwdlac&sv=2018-03-28&ss=b&srt=sco&sig=EcSwu4LvZeQoeX3T2z2ftzxxG59qxtvq3bNLSE2HOSM%3D"
+        };
+
+        const blobUri = 'https://' + account.name + '.blob.core.windows.net';
+        const blobService = AzureStorage.Blob.createBlobServiceWithSas(blobUri, account.sas);
+        const container = "talentcontest";
+
+        document.getElementById('submitBtn').addEventListener('click',
+            (e) => {
+                e.preventDefault();
+                console.log("New function started");
+                const file = document.getElementById('Submission_FormFile').files[0];
+                const fileName = file.name.replace(/\.[^/.]+$/, "") + new Date().getTime();
+                console.log(`Filename: ${fileName}`);
+
+                // Make a smaller block size when uploading small blobs
+                var blockSize = file.size > 1024 * 1024 * 32 ? 1024 * 1024 * 4 : 1024 * 512;
+                var options = {
+                    storeBlobContentMD5 : file.md5,
+                    blockSize : blockSize
+                };
+                blobService.singleBlobPutThresholdInBytes = blockSize;
+
+                var finishedOrError = false;
+                var speedSummary = blobService.createBlockBlobFromBrowserFile(container, fileName, file, options, function(error, result, response) {
+                    finishedOrError = true;
+                    if (error) {
+                        alert('Upload failed, open browser console for more detailed info.');
+                        console.log(error);
+                        displayProcess(0);
+                    } else {
+                        displayProcess(100);
+                        setTimeout(function() { // Prevent alert from stopping UI progress update
+                            alert('Upload success!');
+                        }, 1000);
+                    }
+                });
+
+                speedSummary.on('progress', function () {
+                    var process = speedSummary.getCompletePercent();
+                    displayProcess(process);
+                });
+            });
+
+
+        function displayProcess(process) {
+            document.getElementById('progress').style.width = process + '%';
+            document.getElementById('progress').innerHTML = process + '%';
+        }
+
         function CreateSubmission() {
-            //var entry = new FormData(form);
-            //console.log(entry);
-            //jQuery.each(jQuery('#Submission_FormFile')[0].files, function(i, file) {
-            //    entry.append('file-'+i, file);
-            //});
 
-        //    const entry = {
-        //        firstName: $('#Submission_FirstName').val(),
-        //    lastName: $('#Submission_LastName').val(),
-        //    email: $('#Submission_Email').val(),
-        //    managerName: $('#Submission_ManagerName').val(),
-        //    locationId: $('#Submission_LocationId').val(),
-        //    phoneNumber: $('#Submission_PhoneNumber').val(),
-        //    fileName: $('#Submission_FormFile').val(),
-        //    talent: $('#Submission_Talent').val(),
-        //    imageConsent: $('#Submission_ImageConsent').val(),
-        //    contestConsent: $('#Submission_ContestConsent').val(),
-        //    employeeId: $('#Submission_EmployeeId').val()
-        //};
-            //console.log(entry);
-        //$.ajax({
-        //    method: "POST",
-        //    url: `/api/Entry/`,
-        //    data: entry,
-            
-        //    success: function(results) {
-        //        console.log(results);
-
-        //    },
-        //    error: function(jqXhr, exception) {
-        //        console.error(jqXhr, exception);
-        //    }
-        //});
         }
     </script>
 }
