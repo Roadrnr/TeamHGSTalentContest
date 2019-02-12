@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace TeamHGSTalentContest.Services
 {
@@ -14,5 +13,6 @@ namespace TeamHGSTalentContest.Services
         Task<string> GetFile(string filename, string containerName);
         Task<Stream> StreamFile(string filename, string containerName);
         Task<bool> DeleteFile(string filename, string containerName);
+        string GenerateSasToken();
     }
 }

@@ -25,7 +25,7 @@ namespace TeamHGSTalentContest.Pages.Submissions
             _logger = logger;
         }
 
-        public IList<SubmissionViewModel> Submission { get;set; }
+        public IList<SubmissionViewModel> Submission { get; set; }
 
         public async Task OnGetAsync()
         {
@@ -39,7 +39,7 @@ namespace TeamHGSTalentContest.Pages.Submissions
                 ManagerName = e.ManagerName,
                 DateCreated = e.DateCreated,
                 Talent = e.Talent,
-                FileName = e.FileName,
+                FileName = $"https://ptslmanager.blob.core.windows.net/talentcontest/{e.FileName}",
                 Id = e.Id,
                 LocationName = e.Location.Name,
                 ImageConsent = e.ImageConsent,
@@ -48,18 +48,18 @@ namespace TeamHGSTalentContest.Pages.Submissions
                 Archive = e.Archive
             }).OrderByDescending(e => e.DateCreated).ToList();
 
-            foreach(var entry in vm)
+            foreach (var entry in vm)
             {
                 var avg = 0.00;
                 var rankCount = 0;
                 var values = await _context.Rankings.Where(r => r.SubmissionId == entry.Id).ToListAsync();
-                if(values.Count > 0)
+                if (values.Count > 0)
                 {
                     rankCount = values.Count;
                     avg = values.Select(r => r.Value).Average();
 
                     var userRank = values.Where(r => r.RankedBy == User.Identity.Name).SingleOrDefault();
-                    if(userRank != null)
+                    if (userRank != null)
                     {
                         entry.UserRank = userRank.Value;
                         entry.UserRankId = userRank.Id;
@@ -117,18 +117,18 @@ namespace TeamHGSTalentContest.Pages.Submissions
         public async Task<IActionResult> OnGetDeleteAsync(int id)
         {
             var archiveEntry = await _context.Submissions.SingleOrDefaultAsync(c => c.Id == id);
-            var fileUrl = new Uri(archiveEntry.FileName);
-                var fileName = System.IO.Path.GetFileName(fileUrl.LocalPath);
-                var result = await _storage.DeleteFile(fileName, "talentcontest");
-                if (result)
-                {
-                    _logger.LogInformation($"{User.Identity.Name} deleted {archiveEntry.FileName} from Azure");
-                }
-                else
-                {
-                    _logger.LogWarning($"{User.Identity.Name} Unsuccessfully deleted {archiveEntry.FileName} from Azure");
-                }
-            
+            var fileUrl = new Uri($"https://ptslmanager.blob.core.windows.net/talentcontest/{archiveEntry.FileName}");
+            var fileName = System.IO.Path.GetFileName(fileUrl.LocalPath);
+            var result = await _storage.DeleteFile(fileName, "talentcontest");
+            if (result)
+            {
+                _logger.LogInformation($"{User.Identity.Name} deleted {archiveEntry.FileName} from Azure");
+            }
+            else
+            {
+                _logger.LogWarning($"{User.Identity.Name} Unsuccessfully deleted {archiveEntry.FileName} from Azure");
+            }
+
             _context.Remove(archiveEntry);
             await _context.SaveChangesAsync();
             _logger.LogInformation($"{User.Identity.Name} deleted entryId: {archiveEntry.Id}");

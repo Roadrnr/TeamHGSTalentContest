@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -8,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using TeamHGSTalentContest.Data;
 using TeamHGSTalentContest.Filters;
 using TeamHGSTalentContest.Models;
-using TeamHGSTalentContest.Services;
 using TeamHGSTalentContest.ViewModels;
 
 namespace TeamHGSTalentContest.Pages
@@ -18,12 +16,10 @@ namespace TeamHGSTalentContest.Pages
     public class CreateModel : PageModel
     {
         private readonly ApplicationDbContext _context;
-        private readonly IAzureStorageService _storage;
         public SelectList LocationSl { get; set; }
-        public CreateModel(ApplicationDbContext context, IAzureStorageService storage)
+        public CreateModel(ApplicationDbContext context)
         {
             _context = context;
-            _storage = storage;
         }
 
         
@@ -41,12 +37,12 @@ namespace TeamHGSTalentContest.Pages
         
         public async Task<IActionResult> OnPostAsync()
         {
-            var supportedTypes = new[] { "mp4", "webm", "ogg"};
-            var fileExt = Path.GetExtension(Submission.FormFile.FileName).Substring(1);
-            if (!supportedTypes.Contains(fileExt))
-            {
-                ModelState.AddModelError("Submission.FileName","File must be in mp4, webm, or ogg format.");
-            }
+            //var supportedTypes = new[] { "mp4", "webm", "ogg"};
+            //var fileExt = Path.GetExtension(Submission.FormFile.FileName).Substring(1);
+            //if (!supportedTypes.Contains(fileExt))
+            //{
+            //    ModelState.AddModelError("Submission.FileName","File must be in mp4, webm, or ogg format.");
+            //}
 
             if (!Submission.ImageConsent)
             {
@@ -55,18 +51,18 @@ namespace TeamHGSTalentContest.Pages
 
             if (!ModelState.IsValid)
             {
-                Submission.FileName = Submission.FormFile.FileName;
+                //Submission.FileName = Submission.FormFile.FileName;
                 var locations = await _context.Locations.OrderBy(e => e.Name).ToListAsync();
                 LocationSl = new SelectList(locations, nameof(Location.Id), nameof(Location.Name), "0");
                 Submission.ErrorMessage = "Your entry was not successful.";
                 return Page();
             }
 
-            var contentType = Submission.FormFile.ContentType;
-            var uploadFile = Submission.FormFile.OpenReadStream();
-            var fileName =
-                await _storage.StoreAndGetFile(Submission.FormFile.FileName, "talentcontest", contentType, uploadFile);
-            Submission.FileName = fileName;
+            //var contentType = Submission.FormFile.ContentType;
+            //var uploadFile = Submission.FormFile.OpenReadStream();
+            //var fileName =
+                //await _storage.StoreAndGetFile(Submission.FormFile.FileName, "talentcontest", contentType, uploadFile);
+            //Submission.FileName = fileName;
 
             var sub = new Submission
             {
@@ -76,7 +72,7 @@ namespace TeamHGSTalentContest.Pages
                 ManagerName = Submission.ManagerName,
                 LocationId = Submission.LocationId,
                 PhoneNumber = Submission.PhoneNumber,
-                FileName = fileName,
+                FileName = Submission.FileName,
                 Talent = Submission.Talent,
                 ImageConsent = Submission.ImageConsent,
                 ContestConsent = Submission.ContestConsent,

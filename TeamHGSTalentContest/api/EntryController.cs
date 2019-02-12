@@ -32,6 +32,13 @@ namespace TeamHGSTalentContest.api
             _storage = storage;
             _logger = logger;
         }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            var token = _storage.GenerateSasToken();
+            return Ok(token);
+        }
         // POST api/<controller>
         [HttpPost]
         [DisableFormValueModelBinding]

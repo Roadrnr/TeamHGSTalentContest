@@ -3,7 +3,6 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
@@ -148,7 +147,7 @@ namespace TeamHGSTalentContest.Services
 
         public async Task<string> GetFile(string filename, string containerName)
         {
-            var url = $"{_config["BlobService:StorageUrl"]}{containerName}/";
+            var url = $"{_config["Azure:StorageUrl"]}{containerName}/";
             await GetContainer(containerName);
             // Get a reference to a blob named filename.
             var getFile = _container.GetBlockBlobReference(filename);
@@ -187,6 +186,26 @@ namespace TeamHGSTalentContest.Services
             var file = _container.GetBlockBlobReference(filename);
             var result = await file.DeleteIfExistsAsync();
             return result;
+        }
+
+        public string GenerateSasToken()
+        {
+            var policy = new SharedAccessAccountPolicy
+            {
+                // SAS for Blob service only.
+                Services = SharedAccessAccountServices.Blob,
+
+                // User has create, read, write, and delete permissions on blobs.
+                ResourceTypes = SharedAccessAccountResourceTypes.Object,
+
+                Permissions = SharedAccessAccountPermissions.Read |
+                SharedAccessAccountPermissions.Write |
+                SharedAccessAccountPermissions.Create |
+                SharedAccessAccountPermissions.Delete,
+                SharedAccessExpiryTime = DateTime.UtcNow.AddHours(24),
+                Protocols = SharedAccessProtocol.HttpsOnly
+            };
+            return _storageAccount.GetSharedAccessSignature(policy);
         }
     }
 }

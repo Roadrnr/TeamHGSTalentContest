@@ -51,10 +51,10 @@ namespace TeamHGSTalentContest.ViewModels
         [StringLength(10000)]
         public string Talent { get; set; }
 
-        [Required]
         [Display(Name = "Choose a video file")]
         public IFormFile FormFile { get; set; }
 
+        [Required]
         [Display(Name = "File Name")]
         public string FileName { get; set; }
 

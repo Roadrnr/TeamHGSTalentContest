@@ -26,12 +26,13 @@ namespace TeamHGSTalentContest.Pages
             }
 
             var sub = await _context.Submissions.Include(m => m.Location).FirstOrDefaultAsync(m => m.StringId.ToString() == id);
+
             Submission = new SubmissionViewModel
             {
                 Id = sub.Id,
                 Talent = sub.Talent,
                 Email = sub.Email,
-                FileName = sub.FileName,
+                FileName = $"https://ptslmanager.blob.core.windows.net/talentcontest/{sub.FileName}",
                 FirstName = sub.FirstName,
                 LastName = sub.LastName,
                 LocationName = sub.Location.Name,
