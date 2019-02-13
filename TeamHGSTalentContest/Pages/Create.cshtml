@@ -175,115 +175,113 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="~/js/azure-storage.blob.min.js"></script>
+<script>
+    $(function () {
+    $('input:submit').removeAttr('disabled');
+    $('#progressDiv').addClass('d-none');
+});
 
-    <script>
-        $(function () {
-            $('input:submit').removeAttr('disabled');
-            $('#progressDiv').addClass('d-none');
-        });
+//Check the file added to ensure it is of the correct type
+$('input[type=file]').change(function () {
+    var val = $(this).val().toLowerCase();
+    var regex = new RegExp("(.*?)\.(ogv|avi|mp4|mv4|mpeg|wmv|mov|ogm|webm|asx|mpg)$");
+    if (!regex.test(val)) {
+        $(this).val('');
+        alert('Only video files are supported. Please check the format of your file and try again.');
+    } else {
+        var fileName = $(this).val().replace("C:\\fakepath\\", "");
+        //replace the "Choose a file" label
+        $('.custom-file-label').html(fileName);
+    }
+});
 
-        //Check the file added to ensure it is of the correct type
-        $('input[type=file]').change(function () {
-            var val = $(this).val().toLowerCase();
-            var regex = new RegExp("(.*?)\.(ogv|avi|mp4|mv4|mpeg|wmv|mov|ogm|webm|asx|mpg)$");
-            if (!(regex.test(val))) {
-                $(this).val('');
-                alert('Only video files are supported. Please check the format of your file and try again.');
-            } else {
-                var fileName = $(this).val().replace("C:\\fakepath\\", "");;
-                //replace the "Choose a file" label
-                $('.custom-file-label').html(fileName);
+    // extend jquery range validator to work for required checkboxes
+var defaultRangeValidator = $.validator.methods.range;
+$.validator.methods.range = function (value, element, param) {
+    if (element.type === 'checkbox') {
+        // if it's a checkbox return true if it is checked
+        return element.checked;
+    } else {
+        // otherwise run the default validation function
+        return defaultRangeValidator.call(this, value, element, param);
+    }
+    };
+
+    //Set Azure Info
+const azureAccount = {
+    name: "teamhgs",
+    sas: ""
+};
+
+let blobService;
+const blobUri = 'https://' + azureAccount.name + '.blob.core.windows.net';
+const container = "talentcontest";
+
+$.get("/api/Entry/", function (data) {
+    azureAccount.sas = data;
+    blobService = AzureStorage.Blob.createBlobServiceWithSas(blobUri, azureAccount.sas);
+});
+
+
+//Submit button clicked, process the upload and form values
+$(document).on('click', '#submitBtn', function (e) {
+    e.preventDefault();
+    const file = document.getElementById('Submission_FormFile').files[0];
+    const firstName = $('#Submission_FirstName').val();
+    const lastName = $('#Submission_LastName').val();
+    const form = $("#EntryForm");
+    const timeStamp = Date.now();
+    let fileName = `${firstName}_${lastName}_${timeStamp}.${getFileExtension1(file.name)}`;
+    const fileType = file.type;
+
+    $(this).val('Loading...');
+    $('.pleaseWait').html("Please be patient. This may take a few minutes depending on the file size.");
+    $(this).attr('disabled', 'disabled');
+    $('#progressDiv').removeClass('d-none');
+
+    // Make a smaller block size when uploading small blobs
+    var blockSize = file.size > 1024 * 1024 * 32 ? 1024 * 1024 * 4 : 1024 * 512;
+    var options = {
+        storeBlobContentMD5: file.md5,
+        blockSize: blockSize
+    };
+    blobService.singleBlobPutThresholdInBytes = blockSize;
+
+    var finishedOrError = false;
+    var speedSummary = blobService.createBlockBlobFromBrowserFile(container, fileName, file, options, function (error, result, response) {
+        finishedOrError = true;
+        if (error) {
+            alert('Upload failed, open browser console for more detailed info.');
+            console.log(error);
+            displayProcess(0);
+        } else {
+            displayProcess(100);
+            //setTimeout(function () { // Prevent alert from stopping UI progress update
+            //    alert('Upload success!');
+            //}, 1000);
+            if (form.valid()) {
+                $('#Submission_FileName').val(fileName);
+                $('#Submission_FormFile').val("");
+                console.log("Form is valid");
+
+                form.submit();
             }
-        });
-
-        // extend jquery range validator to work for required checkboxes
-        var defaultRangeValidator = $.validator.methods.range;
-        $.validator.methods.range = function (value, element, param) {
-            if (element.type === 'checkbox') {
-                // if it's a checkbox return true if it is checked
-                return element.checked;
-            } else {
-                // otherwise run the default validation function
-                return defaultRangeValidator.call(this, value, element, param);
-            }
         }
-        //Set Azure Info
-        const account = {
-            name: "ptslmanager",
-            sas: ""
-        };
+    });
 
-        let blobService;
-        const blobUri = 'https://' + account.name + '.blob.core.windows.net';
-        const container = "talentcontest";
+    speedSummary.on('progress', function () {
+        var process = speedSummary.getCompletePercent();
+        displayProcess(process);
+    });
+});
 
-        $.get("/api/Entry/", function (data) {
-            account.sas = data;
-            blobService = AzureStorage.Blob.createBlobServiceWithSas(blobUri, account.sas);
-        });
-        
+function displayProcess(process) {
+    document.getElementById('progress').style.width = process + '%';
+    document.getElementById('progress').innerHTML = process + '%';
+}
 
-        //Submit button clicked, process the upload and form values
-        $(document).on('click', '#submitBtn', function (e) {
-            e.preventDefault();
-            console.log("New function started");
-            const file = document.getElementById('Submission_FormFile').files[0];
-            const firstName = $('#Submission_FirstName').val();
-            const lastName = $('#Submission_LastName').val();
-            const form = $("#EntryForm");
-            const timeStamp = Date.now();
-            let fileName = `${firstName}_${lastName}_${timeStamp}.${getFileExtension1(file.name)}`;
-            const fileType = file.type;
-            console.log(`Filename: ${fileName}`);
-
-            $(this).val('Loading...');
-            $('.pleaseWait').html("Please be patient. This may take a few minutes depending on the file size.");
-            $(this).attr('disabled', 'disabled');
-            $('#progressDiv').removeClass('d-none');
-
-            // Make a smaller block size when uploading small blobs
-            var blockSize = file.size > 1024 * 1024 * 32 ? 1024 * 1024 * 4 : 1024 * 512;
-            var options = {
-                storeBlobContentMD5: file.md5,
-                blockSize: blockSize
-            };
-            blobService.singleBlobPutThresholdInBytes = blockSize;
-
-            var finishedOrError = false;
-            var speedSummary = blobService.createBlockBlobFromBrowserFile(container, fileName, file, options, function (error, result, response) {
-                finishedOrError = true;
-                if (error) {
-                    alert('Upload failed, open browser console for more detailed info.');
-                    console.log(error);
-                    displayProcess(0);
-                } else {
-                    displayProcess(100);
-                    //setTimeout(function () { // Prevent alert from stopping UI progress update
-                    //    alert('Upload success!');
-                    //}, 1000);
-                    if (form.valid()) {
-                        $('#Submission_FileName').val(fileName);
-                        $('#Submission_FormFile').val("");
-                        console.log("Form is valid");
-
-                        form.submit();
-                    }
-                }
-            });
-
-            speedSummary.on('progress', function () {
-                var process = speedSummary.getCompletePercent();
-                displayProcess(process);
-            });
-        });
-
-        function displayProcess(process) {
-            document.getElementById('progress').style.width = process + '%';
-            document.getElementById('progress').innerHTML = process + '%';
-        }
-
-        function getFileExtension1(filename) {
-            return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename)[0] : undefined;
-        }
-    </script>
+function getFileExtension1(filename) {
+    return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename)[0] : undefined;
+}
+</script>
 }

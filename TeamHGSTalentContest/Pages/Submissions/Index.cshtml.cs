@@ -39,7 +39,7 @@ namespace TeamHGSTalentContest.Pages.Submissions
                 ManagerName = e.ManagerName,
                 DateCreated = e.DateCreated,
                 Talent = e.Talent,
-                FileName = $"https://ptslmanager.blob.core.windows.net/talentcontest/{e.FileName}",
+                FileName = $"https://teamhgs.blob.core.windows.net/talentcontest/{e.FileName}",
                 Id = e.Id,
                 LocationName = e.Location.Name,
                 ImageConsent = e.ImageConsent,
@@ -117,7 +117,7 @@ namespace TeamHGSTalentContest.Pages.Submissions
         public async Task<IActionResult> OnGetDeleteAsync(int id)
         {
             var archiveEntry = await _context.Submissions.SingleOrDefaultAsync(c => c.Id == id);
-            var fileUrl = new Uri($"https://ptslmanager.blob.core.windows.net/talentcontest/{archiveEntry.FileName}");
+            var fileUrl = new Uri($"https://teamhgs.blob.core.windows.net/talentcontest/{archiveEntry.FileName}");
             var fileName = System.IO.Path.GetFileName(fileUrl.LocalPath);
             var result = await _storage.DeleteFile(fileName, "talentcontest");
             if (result)

@@ -32,7 +32,7 @@ namespace TeamHGSTalentContest.Pages
                 Id = sub.Id,
                 Talent = sub.Talent,
                 Email = sub.Email,
-                FileName = $"https://ptslmanager.blob.core.windows.net/talentcontest/{sub.FileName}",
+                FileName = $"https://teamhgs.blob.core.windows.net/talentcontest/{sub.FileName}",
                 FirstName = sub.FirstName,
                 LastName = sub.LastName,
                 LocationName = sub.Location.Name,
