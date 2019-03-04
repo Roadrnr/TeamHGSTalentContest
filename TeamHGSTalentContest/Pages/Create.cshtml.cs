@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -25,6 +26,14 @@ namespace TeamHGSTalentContest.Pages
         
         public async Task<IActionResult> OnGet()
         {
+            var dateNow = DateTime.Now;
+            var dateClosed = new DateTime(2019, 03, 03, 23, 59, 59);
+
+            if (dateNow > dateClosed)
+            {
+                return RedirectToPage("Closed");
+            }
+
             var locations = await _context.Locations.OrderBy(e => e.Name).ToListAsync();
             LocationSl = new SelectList(locations,nameof(Location.Id),nameof(Location.Name), "0");
             return Page();

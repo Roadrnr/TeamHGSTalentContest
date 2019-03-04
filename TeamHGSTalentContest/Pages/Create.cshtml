@@ -66,7 +66,7 @@
                         <div class="custom-file">
                             <input type="hidden" asp-for="Submission.FileName" />
                             <label asp-for="Submission.FormFile" class="custom-file-label"></label>
-                            <input asp-for="Submission.FormFile" class="custom-file-input" accept="video/*," />
+                            <input asp-for="Submission.FormFile" class="custom-file-input" accept="video/mp4,video/x-m4v,video/*" />
                             <span asp-validation-for="Submission.FormFile" class="text-danger"></span>
                             <span asp-validation-for="Submission.FileName" class="text-danger"></span>
                         </div>
@@ -205,7 +205,7 @@ $.validator.methods.range = function (value, element, param) {
         // otherwise run the default validation function
         return defaultRangeValidator.call(this, value, element, param);
     }
-    };
+};
 
     //Set Azure Info
 const azureAccount = {
